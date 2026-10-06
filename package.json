@@ -1,0 +1,32 @@
+{
+  "name": "mini-gerenciamento-celulares",
+  "version": "1.0.0",
+  "description": "Mini sistema para gerenciamento de celulares com Node.js, MongoDB e Frontend Vanilla",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test tests/*.test.js",
+    "seed": "node seed.js"
+  },
+  "keywords": [
+    "nodejs",
+    "mongodb",
+    "crud",
+    "celulares",
+    "vercel"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.3.0",
+    "supertest": "^7.0.0"
+  }
+}

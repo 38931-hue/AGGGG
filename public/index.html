@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartManage — Gerenciamento de Celulares</title>
+  <meta name="description" content="Sistema moderno e responsivo para cadastro, listagem, edição e exclusão de celulares." />
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>" />
+  
+  <!-- Folha de Estilos -->
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- Toast de Notificações -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Cabeçalho Principal -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="logo-area">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+        </div>
+        <div>
+          <h1 class="logo-title">SmartManage</h1>
+          <p class="logo-subtitle">Mini Sistema de Gerenciamento de Celulares</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="input-busca" placeholder="Buscar por marca ou modelo..." aria-label="Buscar celular" />
+        </div>
+        <button id="btn-novo-celular" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Novo Celular
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-container">
+    
+    <!-- Barra de Métricas Rápidas -->
+    <section class="stats-bar" id="stats-bar">
+      <div class="stat-card">
+        <span class="stat-label">Total Cadastrado</span>
+        <span class="stat-value" id="stat-total">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Preço Médio</span>
+        <span class="stat-value" id="stat-media">R$ 0,00</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Marca em Destaque</span>
+        <span class="stat-value" id="stat-top-brand">—</span>
+      </div>
+    </section>
+
+    <!-- Cabeçalho da Listagem -->
+    <section class="list-header">
+      <h2 class="section-title">Aparelhos Disponíveis</h2>
+      <button id="btn-recarregar" class="btn btn-secondary btn-sm" title="Recarregar lista">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        Atualizar
+      </button>
+    </section>
+
+    <!-- Grid de Celulares -->
+    <div id="celulares-grid" class="cards-grid">
+      <!-- Cards serão injetados dinamicamente via JS -->
+    </div>
+
+    <!-- Estado de Carregamento (Loading Skeleton) -->
+    <div id="loading-state" class="cards-grid" style="display: none;">
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-line" style="width: 40%"></div>
+        <div class="skeleton-line" style="width: 70%"></div>
+        <div class="skeleton-line" style="width: 50%"></div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-line" style="width: 40%"></div>
+        <div class="skeleton-line" style="width: 70%"></div>
+        <div class="skeleton-line" style="width: 50%"></div>
+      </div>
+      <div class="skeleton-card">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-line" style="width: 40%"></div>
+        <div class="skeleton-line" style="width: 70%"></div>
+        <div class="skeleton-line" style="width: 50%"></div>
+      </div>
+    </div>
+
+    <!-- Estado Vazio (Empty State) -->
+    <div id="empty-state" class="empty-state" style="display: none;">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          <line x1="9" y1="6" x2="15" y2="6"></line>
+        </svg>
+      </div>
+      <h3>Nenhum aparelho encontrado</h3>
+      <p id="empty-state-desc">Cadastre seu primeiro smartphone para começar a gerenciar seu inventário.</p>
+      <button id="btn-cadastrar-primeiro" class="btn btn-primary">
+        Cadastrar Primeiro Celular
+      </button>
+    </div>
+
+    <!-- Estado de Erro de Conexão -->
+    <div id="error-state" class="error-state" style="display: none;">
+      <div class="error-icon">⚠️</div>
+      <h3>Falha na Conexão</h3>
+      <p id="error-state-message">Não foi possível carregar a lista de celulares. Verifique se o servidor e o banco de dados estão acessíveis.</p>
+      <button id="btn-tentar-novamente" class="btn btn-secondary">
+        Tentar Novamente
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Modal de Cadastro / Edição -->
+  <div id="modal-form" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-titulo">Novo Celular</h2>
+        <button id="btn-fechar-modal" class="btn-icon" aria-label="Fechar modal">✕</button>
+      </div>
+
+      <form id="form-celular" novalidate>
+        <input type="hidden" id="celular-id" />
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="campo-marca">Marca <span class="required">*</span></label>
+            <input type="text" id="campo-marca" placeholder="Ex: Samsung, Apple, Xiaomi" required />
+            <span class="field-error" id="erro-marca"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="campo-modelo">Modelo <span class="required">*</span></label>
+            <input type="text" id="campo-modelo" placeholder="Ex: Galaxy S25, iPhone 16" required />
+            <span class="field-error" id="erro-modelo"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="campo-preco">Preço (R$) <span class="required">*</span></label>
+            <input type="number" id="campo-preco" step="0.01" min="0" placeholder="Ex: 4999.90" required />
+            <span class="field-error" id="erro-preco"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="campo-foto">URL da Foto <span class="required">*</span></label>
+            <input type="url" id="campo-foto" placeholder="https://exemplo.com/foto.jpg" required />
+            <span class="field-error" id="erro-foto"></span>
+          </div>
+        </div>
+
+        <!-- Preview da Imagem -->
+        <div class="preview-container">
+          <span class="preview-label">Pré-visualização da imagem:</span>
+          <div class="preview-box">
+            <img id="img-preview" src="" alt="Prévia do aparelho" style="display: none;" />
+            <span id="preview-placeholder">Insira uma URL válida para ver a prévia</span>
+          </div>
+        </div>
+
+        <!-- Mensagem de Erro do Formulário -->
+        <div id="form-alerta-erro" class="alert-error" style="display: none;"></div>
+
+        <div class="modal-actions">
+          <button type="button" id="btn-cancelar-form" class="btn btn-secondary">Cancelar</button>
+          <button type="submit" id="btn-salvar-celular" class="btn btn-primary">
+            <span id="btn-salvar-texto">Salvar Aparelho</span>
+            <span id="btn-salvar-spinner" class="spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmação de Exclusão -->
+  <div id="modal-confirm-delete" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card modal-sm">
+      <div class="delete-icon-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </div>
+      <h2 class="delete-title">Excluir Celular?</h2>
+      <p class="delete-desc" id="delete-message">
+        Tem certeza que deseja excluir este aparelho? Esta ação não pode ser desfeita.
+      </p>
+
+      <div class="modal-actions">
+        <button type="button" id="btn-cancelar-delete" class="btn btn-secondary">Cancelar</button>
+        <button type="button" id="btn-confirmar-delete" class="btn btn-danger">
+          <span id="btn-delete-texto">Sim, Excluir</span>
+          <span id="btn-delete-spinner" class="spinner" style="display: none;"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="app-footer">
+    <p>SmartManage &bull; Gerenciamento de Celulares &bull; Node.js + MongoDB + Frontend Vanilla &bull; Vercel Ready</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
